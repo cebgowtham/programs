@@ -1,0 +1,94 @@
+package Train;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+
+class ThreadTest extends Thread {
+	
+	FileWriter fw;
+	BufferedWriter bw;
+	HashSet<String> trainList=new HashSet<String>();	
+	static int totalTrainInStation;    
+	
+	public ThreadTest(String str)  // constructor : Initialize train name objects. 
+	{  
+		super(str);
+	}
+ 
+public void run() {
+	
+	// Train Running from one position to another position		
+	
+	for (int k = 0; k < 5; k++) 
+	{
+			System.out.println("Train Name: " + getName());
+			try 
+			{
+				System.out.println("Active Count = "+(activeCount()-1));
+				if((activeCount()-1)>4)
+				wait();
+					
+				sleep(500);
+			}
+			catch (InterruptedException e) 
+			{
+				System.out.println("Interrupped Exception "+e.toString());
+	   	    }
+	}
+	
+try
+{
+	System.out.println("Test Finished for: " + getName());
+     // Which Train Reached at Station
+	
+	fw=new FileWriter("d:/123.txt");
+		 
+		 bw=new BufferedWriter(fw);
+		bw.write("Train Name: "+ getName() + " Arraive Time: " + System.nanoTime());		
+		bw.flush();
+		bw.close();
+	}
+catch (IOException e) 
+{
+		// TODO Auto-generated catch block
+		System.out.println("Error "+e.toString());
+		e.printStackTrace();
+	}
+
+
+	
+	System.out.println("\n Total No. of Train(s) arrived in Station:"+ ++totalTrainInStation);
+		
+	trainList.add(getName());  // Reached Train in station stored to collection(hashset) 
+		
+	 Iterator <String> trainName = trainList.iterator();
+     while (trainName.hasNext())
+     System.out.println(trainName.next());
+     
+     
+  }
+}
+
+public class WorkOut2 {
+
+			public static void main(String args[]) throws InterruptedException 
+			{
+				ThreadTest ts1= new ThreadTest("Train1");
+				ThreadTest ts2= new ThreadTest("Train2");
+				ThreadTest ts3= new ThreadTest("Train3");
+				ThreadTest ts4= new ThreadTest("Train4");
+				ThreadTest ts5= new ThreadTest("Train5");
+				
+				ts1.start();
+				ts2.start();
+				ts3.start();
+				ts4.start();
+				
+				ts4.join();
+				ts5.start();
+			}
+}
+		 
+		
